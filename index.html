@@ -3,35 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RAKUTEN RAGE - FPL Web App</title>
+  <title>RAKUTEN RAGE - FPL Analyzer</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="script.js" defer></script>
+  <link rel="icon" href="logo.png" type="image/png" />
 </head>
 <body>
-  <header>
-    <img src="logo.png" alt="FPL Logo" class="logo" />
+  <div class="container">
+    <img src="Logo.png" alt="Team Logo" class="team-logo" />
     <h1>RAKUTEN RAGE</h1>
-    <p class="subtext">Fantasy Premier League Dashboard</p>
-  </header>
-
-  <main>
-    <section class="summary">
+    <div id="summary-box">
       <h2>Latest Gameweek Summary</h2>
-      <div class="info-box">
-        <p><strong>Team ID:</strong> <span id="team-id">2531858</span></p>
-        <p><strong>Points:</strong> <span id="points">Updating...</span></p>
-        <p><strong>Captain:</strong> <span id="captain">Updating...</span></p>
-        <p><strong>Transfers:</strong> <span id="transfers">Updating...</span></p>
-      </div>
-    </section>
+      <p><strong>Team ID:</strong> <span id="team-id">2531858</span></p>
+      <p><strong>Points:</strong> <span id="points"></span></p>
+      <p><strong>Captain:</strong> <span id="captain"></span></p>
+      <p><strong>Transfers:</strong> <span id="transfers"></span></p>
+    </div>
 
-    <section class="actions">
-      <a href="https://fantasy.premierleague.com/my-team" target="_blank" class="fpl-link">Go to Official FPL Site</a>
-    </section>
-  </main>
+    <div id="lineup-section">
+      <h2>Starting XI</h2>
+      <ul id="starting-list"></ul>
 
-  <footer>
-    <p>&copy; 2025 RAKUTEN RAGE. All rights reserved.</p>
-  </footer>
+      <h2>Bench</h2>
+      <ul id="bench-list"></ul>
+
+      <p><strong>Captain:</strong> <span id="captain-name"></span></p>
+      <p><strong>Vice Captain:</strong> <span id="vice-name"></span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
