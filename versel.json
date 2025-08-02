@@ -2,10 +2,13 @@
   "version": 2,
   "builds": [
     { "src": "api/team.js", "use": "@vercel/node" },
-    { "src": "index.html", "use": "@vercel/static" }
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "style.css", "use": "@vercel/static" },
+    { "src": "script.js", "use": "@vercel/static" },
+    { "src": "Logo.png", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/api/team", "dest": "/api/team.js" },
+    { "src": "/api/team", "dest": "api/team.js" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
