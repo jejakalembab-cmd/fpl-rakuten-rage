@@ -1,46 +1,75 @@
-const fetch = require('node-fetch');
-
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   const TEAM_ID = 2531858;
-  const FPL_API = `https://fantasy.premierleague.com/api/my-team/${TEAM_ID}/`;
-  const ENTRY_API = `https://fantasy.premierleague.com/api/entry/${TEAM_ID}/`;
+  const BASE_URL = 'https://fantasy.premierleague.com/api';
 
   try {
-    const [teamRes, entryRes] = await Promise.all([
-      fetch(FPL_API),
-      fetch(ENTRY_API)
+    // Fetch bootstrap data to get current gameweek
+    const bootstrapRes = await fetch(`${BASE_URL}/bootstrap-static/`);
+    const bootstrap = await bootstrapRes.json();
+
+    const currentEvent = bootstrap.events.find(e => e.is_current);
+    if (!currentEvent) {
+      return res.status(500).json({ error: "Current Gameweek not found." });
+    }
+
+    const [entryRes, picksRes] = await Promise.all([
+      fetch(`${BASE_URL}/entry/${TEAM_ID}/`),
+      fetch(`${BASE_URL}/entry/${TEAM_ID}/event/${currentEvent.id}/picks/`)
     ]);
 
-    const teamData = await teamRes.json();
-    const entryData = await entryRes.json();
+    const entry = await entryRes.json();
+    const picks = await picksRes.json();
+
+    const elements = bootstrap.elements;
+    const teams = bootstrap.teams;
+
+    const getPlayerData = (id) => {
+      const player = elements.find(p => p.id === id);
+      const team = teams.find(t => t.id === player.team);
+      return {
+        name: `${player.web_name}`,
+        position: getPosition(player.element_type),
+        team: team.name
+      };
+    };
+
+    const getPosition = (type) => {
+      switch (type) {
+        case 1: return 'GK';
+        case 2: return 'DEF';
+        case 3: return 'MID';
+        case 4: return 'FWD';
+        default: return '';
+      }
+    };
 
     const starting = [];
     const bench = [];
+    let captainName = "Unknown";
 
-    const picks = teamData.picks;
-    for (const pick of picks) {
-      const elementId = pick.element;
-      const isCaptain = pick.is_captain;
-
-      const playerRes = await fetch(`https://fantasy.premierleague.com/api/element-summary/${elementId}/`);
-      const playerData = await playerRes.json();
-
-      const playerName = playerData.history[0]?.web_name || 'Unknown';
-
-      if (pick.position <= 11) {
-        starting.push(isCaptain ? `${playerName} (C)` : playerName);
+    picks.picks.forEach(p => {
+      const playerData = getPlayerData(p.element);
+      if (p.multiplier > 0) {
+        starting.push(playerData);
       } else {
-        bench.push(playerName);
+        bench.push(playerData);
       }
-    }
+      if (p.is_captain) {
+        captainName = playerData.name;
+      }
+    });
 
-    const points = teamData.entry_history?.points || null;
-    const transfers = teamData.entry_history?.event_transfers || 0;
-    const captain = starting.find(p => p.includes('(C)')) || 'Unavailable';
-
-    res.status(200).json({ points, captain, transfers, starting, bench });
+    res.status(200).json({
+      gameweek: currentEvent.id,
+      summary_event_points: entry.summary_event_points,
+      captain: captainName,
+      transfers: `Used ${entry.last_deadline_total_transfers} transfers`,
+      starting,
+      bench
+    });
 
   } catch (err) {
-    res.status(500).json({ error: 'Unable to fetch team data' });
+    console.error("Error fetching FPL data:", err);
+    res.status(500).json({ error: "Failed to load FPL data." });
   }
-};
+}
