@@ -1,42 +1,28 @@
-async function fetchData() {
+const refreshBtn = document.getElementById('refreshBtn');
+const statusEl = document.getElementById('status');
+
+const fetchTeamData = async () => {
+  statusEl.textContent = "Updating...";
   try {
-    const res = await fetch("/api/team");
-    const data = await res.json();
+    const response = await fetch('/api/team');
+    const data = await response.json();
 
-    // Gameweek summary
-    document.getElementById("points").textContent = data.summary_event_points || "N/A";
-    document.getElementById("captain").textContent = data.captain || "N/A";
-    document.getElementById("transfers").textContent = data.transfers || "N/A";
+    document.getElementById('gameweek').textContent = `Gameweek: ${data.current_event}`;
+    document.getElementById('points').textContent = `Points: ${data.entry.history.total_points}`;
+    document.getElementById('captain').textContent = `Captain: ${data.captain.name}`;
+    document.getElementById('transfers').textContent = `Transfers: ${data.entry.history.event_transfers}`;
+    document.getElementById('lineup').textContent = `Starters: ${data.lineup.starting.join(", ")}`;
+    document.getElementById('bench').textContent = `Bench: ${data.lineup.bench.join(", ")}`;
+    document.getElementById('chips').textContent = `Active Chip: ${data.entry.history.chip}`;
+    document.getElementById('rankValue').textContent = `Rank: ${data.entry.summary_overall_rank}, Value: £${data.entry.last_deadline_value / 10}m`;
 
-    // Starting XI
-    const startingUl = document.getElementById("starting-players");
-    startingUl.innerHTML = "";
-    data.starting.forEach(player => {
-      const li = document.createElement("li");
-      li.textContent = `${player.name} (${player.position}) - ${player.team}`;
-      startingUl.appendChild(li);
-    });
-
-    // Bench
-    const benchUl = document.getElementById("bench-players");
-    benchUl.innerHTML = "";
-    data.bench.forEach(player => {
-      const li = document.createElement("li");
-      li.textContent = `${player.name} (${player.position}) - ${player.team}`;
-      benchUl.appendChild(li);
-    });
-
-  } catch (err) {
-    document.getElementById("points").textContent = "Error";
-    document.getElementById("captain").textContent = "Error";
-    document.getElementById("transfers").textContent = "Error";
-    document.getElementById("starting-players").innerHTML = "<li>Unable to load data</li>";
-    document.getElementById("bench-players").innerHTML = "<li>Unable to load data</li>";
+    statusEl.textContent = "Updated";
+  } catch (error) {
+    statusEl.textContent = "Updating..."; // fallback, no error message
   }
-}
+};
+
+refreshBtn.addEventListener('click', fetchTeamData);
 
 // Auto-fetch on load
-fetchData();
-
-// Refresh button
-document.getElementById("refresh-btn").addEventListener("click", fetchData);
+fetchTeamData();
