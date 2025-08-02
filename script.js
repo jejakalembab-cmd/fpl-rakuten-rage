@@ -8,9 +8,9 @@ async function loadTeamData() {
     document.getElementById("rank").textContent = data.last_rank;
   } catch (error) {
     console.error("Error loading team data:", error);
-    document.getElementById("points").textContent = "Error";
-    document.getElementById("gw").textContent = "Error";
-    document.getElementById("rank").textContent = "Error";
+    document.getElementById("points").textContent = "Updating";
+    document.getElementById("gw").textContent = "Updating";
+    document.getElementById("rank").textContent = "Updating";
   }
 }
 
