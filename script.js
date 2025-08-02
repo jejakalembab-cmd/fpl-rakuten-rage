@@ -1,28 +1,51 @@
-const refreshBtn = document.getElementById('refreshBtn');
-const statusEl = document.getElementById('status');
-
 const fetchTeamData = async () => {
-  statusEl.textContent = "Updating...";
+  console.log("🔄 Refresh button clicked"); // Debug log
+
+  // Tunjuk loading status
+  document.getElementById('points').textContent = 'Updating...';
+  document.getElementById('captain').textContent = 'Updating...';
+  document.getElementById('transfers').textContent = 'Updating...';
+  document.getElementById('starters').innerHTML = '';
+  document.getElementById('bench').innerHTML = '';
+
   try {
-    const response = await fetch('/api/team');
-    const data = await response.json();
+    const res = await fetch('/api/team');
+    const data = await res.json();
 
-    document.getElementById('gameweek').textContent = `Gameweek: ${data.current_event}`;
-    document.getElementById('points').textContent = `Points: ${data.entry.history.total_points}`;
-    document.getElementById('captain').textContent = `Captain: ${data.captain.name}`;
-    document.getElementById('transfers').textContent = `Transfers: ${data.entry.history.event_transfers}`;
-    document.getElementById('lineup').textContent = `Starters: ${data.lineup.starting.join(", ")}`;
-    document.getElementById('bench').textContent = `Bench: ${data.lineup.bench.join(", ")}`;
-    document.getElementById('chips').textContent = `Active Chip: ${data.entry.history.chip}`;
-    document.getElementById('rankValue').textContent = `Rank: ${data.entry.summary_overall_rank}, Value: £${data.entry.last_deadline_value / 10}m`;
+    console.log("✅ Data fetched:", data); // Debug log
 
-    statusEl.textContent = "Updated";
+    // Papar data
+    document.getElementById('points').textContent = data.points;
+    document.getElementById('captain').textContent = data.captain;
+    document.getElementById('transfers').textContent = data.transfers;
+
+    data.starters.forEach(player => {
+      const li = document.createElement('li');
+      li.textContent = player;
+      document.getElementById('starters').appendChild(li);
+    });
+
+    data.bench.forEach(player => {
+      const li = document.createElement('li');
+      li.textContent = player;
+      document.getElementById('bench').appendChild(li);
+    });
+
   } catch (error) {
-    statusEl.textContent = "Updating..."; // fallback, no error message
+    console.error("❌ Failed to fetch team data:", error); // Debug log
+    document.getElementById('points').textContent = 'Error';
+    document.getElementById('captain').textContent = 'Error';
+    document.getElementById('transfers').textContent = 'Error';
   }
 };
 
-refreshBtn.addEventListener('click', fetchTeamData);
-
-// Auto-fetch on load
-fetchTeamData();
+// Pastikan button ada & listener aktif
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('refresh');
+  if (btn) {
+    btn.addEventListener('click', fetchTeamData);
+    fetchTeamData(); // Auto load bila page buka
+  } else {
+    console.error("❗ Butang refresh tak jumpa!");
+  }
+});
