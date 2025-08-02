@@ -1,8 +1,5 @@
 {
   "rewrites": [
     { "source": "/api/team", "destination": "/api/team.js" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
