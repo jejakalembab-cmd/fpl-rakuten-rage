@@ -3,38 +3,35 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rakuten Rage - FPL Team Monitor</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Rakuten Rage - FPL Monitor</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <header class="header">
-    <img src="Logo.png" alt="Logo" class="logo" />
-    <h1>RAKUTEN RAGE - FPL MONITOR</h1>
+  <header>
+    <img src="Logo.png" alt="FPL Logo" class="logo"/>
+    <h1>Rakuten Rage - FPL Monitor</h1>
   </header>
 
   <main>
-    <div class="card">
-      <h2>Gameweek Summary</h2>
+    <section class="summary-box">
+      <h2>Latest Gameweek Summary</h2>
+      <p><strong>Team ID:</strong> <span id="team-id">2531858</span></p>
       <p><strong>Points:</strong> <span id="points">Updating...</span></p>
       <p><strong>Captain:</strong> <span id="captain">Updating...</span></p>
       <p><strong>Transfers:</strong> <span id="transfers">Updating...</span></p>
-    </div>
+    </section>
 
-    <div class="card">
-      <h2>Starting XI</h2>
-      <ul id="starters"></ul>
-    </div>
+    <section class="lineup-section">
+      <h3>Starting XI</h3>
+      <ul id="starting-xi">Loading...</ul>
 
-    <div class="card">
-      <h2>Bench</h2>
-      <ul id="bench"></ul>
-    </div>
-
-    <button id="refresh">🔄 Refresh</button>
+      <h3>Bench</h3>
+      <ul id="bench">Loading...</ul>
+    </section>
   </main>
 
   <footer>
-    <p>Powered by Fantasy Premier League • Built for Rakuten Rage</p>
+    <p>&copy; 2025 Rakuten Rage | Powered by FPL API</p>
   </footer>
 
   <script src="script.js"></script>
