@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAKUTEN RAGE - FPL Analyzer</title>
+  <link rel="icon" href="https://fantasy.premierleague.com/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #1c1c1c;
+      color: white;
+      margin: 0;
+      padding: 0;
+      animation: fadein 1s ease-in;
+    }
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    header {
+      background-color: #05f;
+      padding: 1rem;
+      text-align: center;
+    }
+    header img {
+      height: 40px;
+      vertical-align: middle;
+    }
+    header h1 {
+      margin: 0.5rem 0 0;
+      font-size: 1.5rem;
+    }
+    .container {
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    .team-card {
+      background: #2c2c2c;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 0 10px #000;
+      transition: transform 0.3s;
+    }
+    .team-card:hover {
+      transform: translateY(-5px);
+    }
+    a.btn {
+      display: inline-block;
+      margin-top: 1rem;
+      background: #05f;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      text-decoration: none;
+      color: white;
+      transition: background 0.3s;
+    }
+    a.btn:hover {
+      background: #0070f3;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://fantasy.premierleague.com/static/media/pl-main-logo.2c0b1df6.svg" alt="FPL Logo">
+    <h1>RAKUTEN RAGE - FPL Dashboard</h1>
+  </header>
+  <div class="container">
+    <div class="team-card">
+      <h2>Latest Gameweek Summary</h2>
+      <p><strong>Team ID:</strong> 2531858</p>
+      <p><strong>Points:</strong> <span id="points">Loading...</span></p>
+      <p><strong>Captain:</strong> <span id="captain">Loading...</span></p>
+      <p><strong>Transfers:</strong> <span id="transfers">Loading...</span></p>
+    </div>
+    <div class="team-card">
+      <h2>View Full Team on FPL</h2>
+      <a class="btn" href="https://fantasy.premierleague.com/entry/2531858/event/1" target="_blank">Go to Team</a>
+    </div>
+  </div>  <script>
+    async function loadTeamData() {
+      try {
+        const res = await fetch("https://fantasy.premierleague.com/api/entry/2531858/event/1/picks/");
+        const picks = await res.json();
+        const captainId = picks.entry_history.captain;
+
+        const playerRes = await fetch("https://fantasy.premierleague.com/api/bootstrap-static/");
+        const players = await playerRes.json();
+
+        const captain = players.elements.find(p => p.id === captainId)?.web_name || 'Unknown';
+        document.getElementById("points").innerText = picks.entry_history.points;
+        document.getElementById("captain").innerText = captain;
+        document.getElementById("transfers").innerText = picks.entry_history.event_transfers;
+      } catch (err) {
+        console.error(err);
+        document.getElementById("points").innerText = "Error";
+        document.getElementById("captain").innerText = "Error";
+        document.getElementById("transfers").innerText = "Error";
+      }
+    }
+
+    loadTeamData();
+  </script></body>
+</html>
