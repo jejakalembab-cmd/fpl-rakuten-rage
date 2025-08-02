@@ -3,33 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>RAKUTEN RAGE - FPL Analyzer</title>
+  <title>Rakuten Rage - FPL Team Monitor</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="logo.png" type="image/png" />
 </head>
 <body>
-  <div class="container">
-    <img src="Logo.png" alt="Team Logo" class="team-logo" />
-    <h1>RAKUTEN RAGE</h1>
-    <div id="summary-box">
-      <h2>Latest Gameweek Summary</h2>
-      <p><strong>Team ID:</strong> <span id="team-id">2531858</span></p>
-      <p><strong>Points:</strong> <span id="points"></span></p>
-      <p><strong>Captain:</strong> <span id="captain"></span></p>
-      <p><strong>Transfers:</strong> <span id="transfers"></span></p>
+  <header class="header">
+    <img src="Logo.png" alt="Logo" class="logo" />
+    <h1>RAKUTEN RAGE - FPL MONITOR</h1>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Gameweek Summary</h2>
+      <p><strong>Points:</strong> <span id="points">Updating...</span></p>
+      <p><strong>Captain:</strong> <span id="captain">Updating...</span></p>
+      <p><strong>Transfers:</strong> <span id="transfers">Updating...</span></p>
     </div>
 
-    <div id="lineup-section">
+    <div class="card">
       <h2>Starting XI</h2>
-      <ul id="starting-list"></ul>
-
-      <h2>Bench</h2>
-      <ul id="bench-list"></ul>
-
-      <p><strong>Captain:</strong> <span id="captain-name"></span></p>
-      <p><strong>Vice Captain:</strong> <span id="vice-name"></span></p>
+      <ul id="starters"></ul>
     </div>
-  </div>
+
+    <div class="card">
+      <h2>Bench</h2>
+      <ul id="bench"></ul>
+    </div>
+
+    <button id="refresh">🔄 Refresh</button>
+  </main>
+
+  <footer>
+    <p>Powered by Fantasy Premier League • Built for Rakuten Rage</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
