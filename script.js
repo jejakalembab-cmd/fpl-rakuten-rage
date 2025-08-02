@@ -1,43 +1,33 @@
-async function fetchTeamData() {
-  const pointsEl = document.getElementById('points');
-  const captainEl = document.getElementById('captain');
-  const transfersEl = document.getElementById('transfers');
-  const startersEl = document.getElementById('starters');
-  const benchEl = document.getElementById('bench');
+document.addEventListener("DOMContentLoaded", () => {
+  fetch('/api/team')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("points").textContent = data.points || 'N/A';
+      document.getElementById("captain").textContent = data.captain || 'N/A';
+      document.getElementById("transfers").textContent = data.transfers || 'N/A';
 
-  pointsEl.textContent = 'Updating...';
-  captainEl.textContent = 'Updating...';
-  transfersEl.textContent = 'Updating...';
-  startersEl.innerHTML = '';
-  benchEl.innerHTML = '';
+      const startingXI = document.getElementById("starting-xi");
+      const bench = document.getElementById("bench");
 
-  try {
-    const response = await fetch('/api/team');
-    const data = await response.json();
+      startingXI.innerHTML = '';
+      data.starting_xi.forEach(player => {
+        const li = document.createElement("li");
+        li.textContent = `${player.name} (${player.position})`;
+        startingXI.appendChild(li);
+      });
 
-    pointsEl.textContent = data.summary_points ?? 'N/A';
-    captainEl.textContent = data.captain ?? 'N/A';
-    transfersEl.textContent = data.transfers ?? 'N/A';
-
-    data.starters.forEach(player => {
-      const li = document.createElement('li');
-      li.textContent = player;
-      startersEl.appendChild(li);
+      bench.innerHTML = '';
+      data.bench.forEach(player => {
+        const li = document.createElement("li");
+        li.textContent = `${player.name} (${player.position})`;
+        bench.appendChild(li);
+      });
+    })
+    .catch(() => {
+      document.getElementById("points").textContent = 'Error';
+      document.getElementById("captain").textContent = 'Error';
+      document.getElementById("transfers").textContent = 'Error';
+      document.getElementById("starting-xi").textContent = 'Unable to load data';
+      document.getElementById("bench").textContent = 'Unable to load data';
     });
-
-    data.bench.forEach(player => {
-      const li = document.createElement('li');
-      li.textContent = player;
-      benchEl.appendChild(li);
-    });
-  } catch (error) {
-    pointsEl.textContent = 'Error';
-    captainEl.textContent = 'Error';
-    transfersEl.textContent = 'Error';
-    startersEl.innerHTML = '<li>Unable to load data</li>';
-    benchEl.innerHTML = '<li>Unable to load data</li>';
-  }
-}
-
-document.getElementById('refresh').addEventListener('click', fetchTeamData);
-window.addEventListener('load', fetchTeamData);
+});
