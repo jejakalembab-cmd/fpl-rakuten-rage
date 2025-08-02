@@ -1,12 +1,11 @@
-// script.js
-
 const pointsEl = document.getElementById('points');
 const captainEl = document.getElementById('captain');
 const transfersEl = document.getElementById('transfers');
 const startersEl = document.getElementById('starters');
 const benchEl = document.getElementById('bench');
-const refreshBtn = document.getElementById('refresh');
+const refreshBtn = document.getElementById('refreshBtn');
 
+// Fungsi utama fetch data
 const fetchTeamData = async () => {
   pointsEl.textContent = 'Updating...';
   captainEl.textContent = 'Updating...';
@@ -38,21 +37,21 @@ const fetchTeamData = async () => {
       benchEl.appendChild(li);
     });
 
-  } catch (error) {
-    console.error('Fetch failed:', error);
+  } catch (err) {
     pointsEl.textContent = 'Error';
     captainEl.textContent = 'Error';
     transfersEl.textContent = 'Error';
+    console.error('Failed to fetch team data:', err);
   }
 };
 
-// Event: manual refresh
+// Tambah fungsi ke butang refresh
 if (refreshBtn) {
-  refreshBtn.addEventListener('click', fetchTeamData);
+  refreshBtn.addEventListener('click', () => {
+    console.log('Refresh button clicked');
+    fetchTeamData();
+  });
 }
 
-// Auto run once on load
-fetchTeamData();
-
-// Live update every 60 seconds
-setInterval(fetchTeamData, 60000); // 60000 ms = 60s
+// Auto-fetch on page load
+window.addEventListener('DOMContentLoaded', fetchTeamData);
