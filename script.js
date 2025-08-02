@@ -1,51 +1,58 @@
-const fetchTeamData = async () => {
-  console.log("🔄 Refresh button clicked"); // Debug log
+// script.js
 
-  // Tunjuk loading status
-  document.getElementById('points').textContent = 'Updating...';
-  document.getElementById('captain').textContent = 'Updating...';
-  document.getElementById('transfers').textContent = 'Updating...';
-  document.getElementById('starters').innerHTML = '';
-  document.getElementById('bench').innerHTML = '';
+const pointsEl = document.getElementById('points');
+const captainEl = document.getElementById('captain');
+const transfersEl = document.getElementById('transfers');
+const startersEl = document.getElementById('starters');
+const benchEl = document.getElementById('bench');
+const refreshBtn = document.getElementById('refresh');
+
+const fetchTeamData = async () => {
+  pointsEl.textContent = 'Updating...';
+  captainEl.textContent = 'Updating...';
+  transfersEl.textContent = 'Updating...';
+  startersEl.innerHTML = '';
+  benchEl.innerHTML = '';
 
   try {
     const res = await fetch('/api/team');
     const data = await res.json();
 
-    console.log("✅ Data fetched:", data); // Debug log
+    if (data.error) {
+      throw new Error(data.error);
+    }
 
-    // Papar data
-    document.getElementById('points').textContent = data.points;
-    document.getElementById('captain').textContent = data.captain;
-    document.getElementById('transfers').textContent = data.transfers;
+    pointsEl.textContent = data.points;
+    captainEl.textContent = data.captain;
+    transfersEl.textContent = data.transfers;
 
     data.starters.forEach(player => {
       const li = document.createElement('li');
-      li.textContent = player;
-      document.getElementById('starters').appendChild(li);
+      li.textContent = player.name + (player.isCaptain ? ' (C)' : '');
+      startersEl.appendChild(li);
     });
 
     data.bench.forEach(player => {
       const li = document.createElement('li');
-      li.textContent = player;
-      document.getElementById('bench').appendChild(li);
+      li.textContent = player.name;
+      benchEl.appendChild(li);
     });
 
   } catch (error) {
-    console.error("❌ Failed to fetch team data:", error); // Debug log
-    document.getElementById('points').textContent = 'Error';
-    document.getElementById('captain').textContent = 'Error';
-    document.getElementById('transfers').textContent = 'Error';
+    console.error('Fetch failed:', error);
+    pointsEl.textContent = 'Error';
+    captainEl.textContent = 'Error';
+    transfersEl.textContent = 'Error';
   }
 };
 
-// Pastikan button ada & listener aktif
-document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('refresh');
-  if (btn) {
-    btn.addEventListener('click', fetchTeamData);
-    fetchTeamData(); // Auto load bila page buka
-  } else {
-    console.error("❗ Butang refresh tak jumpa!");
-  }
-});
+// Event: manual refresh
+if (refreshBtn) {
+  refreshBtn.addEventListener('click', fetchTeamData);
+}
+
+// Auto run once on load
+fetchTeamData();
+
+// Live update every 60 seconds
+setInterval(fetchTeamData, 60000); // 60000 ms = 60s
