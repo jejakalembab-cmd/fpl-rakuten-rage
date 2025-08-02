@@ -1,75 +1,46 @@
-export default async function handler(req, res) {
-  const TEAM_ID = 2531858;
-  const BASE_URL = 'https://fantasy.premierleague.com/api';
+const fetch = require('node-fetch');
+
+module.exports = async (req, res) => {
+  const TEAM_ID = '2531858';
+  const API_URL = `https://fantasy.premierleague.com/api/entry/${TEAM_ID}/`;
 
   try {
-    // Fetch bootstrap data to get current gameweek
-    const bootstrapRes = await fetch(`${BASE_URL}/bootstrap-static/`);
-    const bootstrap = await bootstrapRes.json();
-
-    const currentEvent = bootstrap.events.find(e => e.is_current);
-    if (!currentEvent) {
-      return res.status(500).json({ error: "Current Gameweek not found." });
-    }
-
-    const [entryRes, picksRes] = await Promise.all([
-      fetch(`${BASE_URL}/entry/${TEAM_ID}/`),
-      fetch(`${BASE_URL}/entry/${TEAM_ID}/event/${currentEvent.id}/picks/`)
-    ]);
+    const entryRes = await fetch(`${API_URL}`);
+    const historyRes = await fetch(`${API_URL}history/`);
+    const picksRes = await fetch(`${API_URL}event/${await getCurrentGW()}/picks/`);
 
     const entry = await entryRes.json();
+    const history = await historyRes.json();
     const picks = await picksRes.json();
 
-    const elements = bootstrap.elements;
-    const teams = bootstrap.teams;
+    const captainId = picks.picks.find(p => p.is_captain).element;
+    const playerData = await fetch(`https://fantasy.premierleague.com/api/bootstrap-static/`).then(r => r.json());
+    const captainName = playerData.elements.find(p => p.id === captainId)?.web_name || 'Unknown';
 
-    const getPlayerData = (id) => {
-      const player = elements.find(p => p.id === id);
-      const team = teams.find(t => t.id === player.team);
-      return {
-        name: `${player.web_name}`,
-        position: getPosition(player.element_type),
-        team: team.name
-      };
+    const lineup = {
+      starting: picks.picks.filter(p => p.position <= 11).map(p => {
+        const player = playerData.elements.find(x => x.id === p.element);
+        return player.web_name;
+      }),
+      bench: picks.picks.filter(p => p.position > 11).map(p => {
+        const player = playerData.elements.find(x => x.id === p.element);
+        return player.web_name;
+      })
     };
-
-    const getPosition = (type) => {
-      switch (type) {
-        case 1: return 'GK';
-        case 2: return 'DEF';
-        case 3: return 'MID';
-        case 4: return 'FWD';
-        default: return '';
-      }
-    };
-
-    const starting = [];
-    const bench = [];
-    let captainName = "Unknown";
-
-    picks.picks.forEach(p => {
-      const playerData = getPlayerData(p.element);
-      if (p.multiplier > 0) {
-        starting.push(playerData);
-      } else {
-        bench.push(playerData);
-      }
-      if (p.is_captain) {
-        captainName = playerData.name;
-      }
-    });
 
     res.status(200).json({
-      gameweek: currentEvent.id,
-      summary_event_points: entry.summary_event_points,
-      captain: captainName,
-      transfers: `Used ${entry.last_deadline_total_transfers} transfers`,
-      starting,
-      bench
+      entry,
+      captain: { id: captainId, name: captainName },
+      lineup,
+      current_event: await getCurrentGW()
     });
-
-  } catch (err) {
-    console.error("Error fetching FPL data:", err);
-    res.status(500).json({ error: "Failed to load FPL data." });
+  } catch (error) {
+    res.status(500).json({ error: 'Fetch failed' });
   }
-}
+
+  async function getCurrentGW() {
+    const events = await fetch(`https://fantasy.premierleague.com/api/bootstrap-static/`).then(r => r.json());
+    const gw = events.events.find(e => e.is_current);
+    return gw ? gw.id : 1;
+  }
+};
