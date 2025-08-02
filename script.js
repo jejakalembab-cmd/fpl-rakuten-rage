@@ -1,35 +1,43 @@
-async function loadTeamData() {
+async function fetchTeamData() {
+  const pointsEl = document.getElementById('points');
+  const captainEl = document.getElementById('captain');
+  const transfersEl = document.getElementById('transfers');
+  const startersEl = document.getElementById('starters');
+  const benchEl = document.getElementById('bench');
+
+  pointsEl.textContent = 'Updating...';
+  captainEl.textContent = 'Updating...';
+  transfersEl.textContent = 'Updating...';
+  startersEl.innerHTML = '';
+  benchEl.innerHTML = '';
+
   try {
-    const res = await fetch('/api/team');
-    const data = await res.json();
+    const response = await fetch('/api/team');
+    const data = await response.json();
 
-    document.getElementById('points').textContent = data.summary_event_points ?? 'Unavailable';
-    document.getElementById('captain').textContent = data.captain ?? 'Unavailable';
-    document.getElementById('transfers').textContent = data.transfers ?? 'Unavailable';
+    pointsEl.textContent = data.summary_points ?? 'N/A';
+    captainEl.textContent = data.captain ?? 'N/A';
+    transfersEl.textContent = data.transfers ?? 'N/A';
 
-    const starters = document.getElementById('starters');
-    const bench = document.getElementById('bench');
-
-    starters.innerHTML = '';
-    bench.innerHTML = '';
-
-    data.starters?.forEach(p => {
+    data.starters.forEach(player => {
       const li = document.createElement('li');
-      li.textContent = `${p.name} (${p.position})`;
-      starters.appendChild(li);
+      li.textContent = player;
+      startersEl.appendChild(li);
     });
 
-    data.bench?.forEach(p => {
+    data.bench.forEach(player => {
       const li = document.createElement('li');
-      li.textContent = `${p.name} (${p.position})`;
-      bench.appendChild(li);
+      li.textContent = player;
+      benchEl.appendChild(li);
     });
-
-  } catch (err) {
-    document.getElementById('points').textContent = 'Updating';
-    document.getElementById('captain').textContent = 'Updating';
-    document.getElementById('transfers').textContent = 'Updating';
+  } catch (error) {
+    pointsEl.textContent = 'Error';
+    captainEl.textContent = 'Error';
+    transfersEl.textContent = 'Error';
+    startersEl.innerHTML = '<li>Unable to load data</li>';
+    benchEl.innerHTML = '<li>Unable to load data</li>';
   }
 }
 
-loadTeamData();
+document.getElementById('refresh').addEventListener('click', fetchTeamData);
+window.addEventListener('load', fetchTeamData);
