@@ -4,34 +4,39 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rakuten Rage - FPL Monitor</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet" />
 </head>
 <body>
   <header>
-    <img src="Logo.png" alt="FPL Logo" class="logo"/>
+    <img src="Logo.png" alt="Logo" class="logo" />
     <h1>Rakuten Rage - FPL Monitor</h1>
+    <button id="refresh">🔄 Refresh</button>
   </header>
 
   <main>
-    <section class="summary-box">
-      <h2>Latest Gameweek Summary</h2>
-      <p><strong>Team ID:</strong> <span id="team-id">2531858</span></p>
+    <section class="summary">
+      <h2>Gameweek Summary</h2>
       <p><strong>Points:</strong> <span id="points">Updating...</span></p>
       <p><strong>Captain:</strong> <span id="captain">Updating...</span></p>
       <p><strong>Transfers:</strong> <span id="transfers">Updating...</span></p>
     </section>
 
-    <section class="lineup-section">
-      <h3>Starting XI</h3>
-      <ul id="starting-xi">Loading...</ul>
+    <section class="lineup">
+      <h2>Starting XI</h2>
+      <ul id="starting"></ul>
+    </section>
 
-      <h3>Bench</h3>
-      <ul id="bench">Loading...</ul>
+    <section class="bench">
+      <h2>Bench</h2>
+      <ul id="bench"></ul>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Rakuten Rage | Powered by FPL API</p>
+    <p>&copy; 2025 Rakuten Rage | Fantasy Premier League Monitor</p>
   </footer>
 
   <script src="script.js"></script>
