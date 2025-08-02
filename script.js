@@ -1,17 +1,25 @@
-async function loadTeamData() {
-  try {
-    const res = await fetch('/api/team');
-    const data = await res.json();
+fetch('/api/team')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("points").innerText = data.points ?? "N/A";
+    document.getElementById("captain").innerText = data.captain?.name ?? "N/A";
+    document.getElementById("transfers").innerText = data.transfers ?? "N/A";
 
-    document.getElementById("points").textContent = data.summary_event_points;
-    document.getElementById("gw").textContent = data.current_event;
-    document.getElementById("rank").textContent = data.last_rank;
-  } catch (error) {
-    console.error("Error loading team data:", error);
-    document.getElementById("points").textContent = "Updating";
-    document.getElementById("gw").textContent = "Updating";
-    document.getElementById("rank").textContent = "Updating";
-  }
-}
+    document.getElementById("captain-name").innerText = data.captain?.name ?? "-";
+    document.getElementById("vice-name").innerText = data.viceCaptain?.name ?? "-";
 
-loadTeamData();
+    data.startingPlayers.forEach(player => {
+      const li = document.createElement("li");
+      li.textContent = player.name;
+      document.getElementById("starting-list").appendChild(li);
+    });
+
+    data.benchPlayers.forEach(player => {
+      const li = document.createElement("li");
+      li.textContent = player.name;
+      document.getElementById("bench-list").appendChild(li);
+    });
+  })
+  .catch(err => {
+    console.error('Error loading team data:', err);
+  });
