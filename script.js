@@ -26,9 +26,9 @@ async function loadTeamData() {
     });
 
   } catch (err) {
-    document.getElementById('points').textContent = 'Error';
-    document.getElementById('captain').textContent = 'Error';
-    document.getElementById('transfers').textContent = 'Error';
+    document.getElementById('points').textContent = 'Updating';
+    document.getElementById('captain').textContent = 'Updating';
+    document.getElementById('transfers').textContent = 'Updating';
   }
 }
 
