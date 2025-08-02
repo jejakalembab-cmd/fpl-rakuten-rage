@@ -1,25 +1,35 @@
-fetch('/api/team')
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("points").innerText = data.points ?? "N/A";
-    document.getElementById("captain").innerText = data.captain?.name ?? "N/A";
-    document.getElementById("transfers").innerText = data.transfers ?? "N/A";
+async function loadTeamData() {
+  try {
+    const res = await fetch('/api/team');
+    const data = await res.json();
 
-    document.getElementById("captain-name").innerText = data.captain?.name ?? "-";
-    document.getElementById("vice-name").innerText = data.viceCaptain?.name ?? "-";
+    document.getElementById('points').textContent = data.summary_event_points ?? 'Unavailable';
+    document.getElementById('captain').textContent = data.captain ?? 'Unavailable';
+    document.getElementById('transfers').textContent = data.transfers ?? 'Unavailable';
 
-    data.startingPlayers.forEach(player => {
-      const li = document.createElement("li");
-      li.textContent = player.name;
-      document.getElementById("starting-list").appendChild(li);
+    const starters = document.getElementById('starters');
+    const bench = document.getElementById('bench');
+
+    starters.innerHTML = '';
+    bench.innerHTML = '';
+
+    data.starters?.forEach(p => {
+      const li = document.createElement('li');
+      li.textContent = `${p.name} (${p.position})`;
+      starters.appendChild(li);
     });
 
-    data.benchPlayers.forEach(player => {
-      const li = document.createElement("li");
-      li.textContent = player.name;
-      document.getElementById("bench-list").appendChild(li);
+    data.bench?.forEach(p => {
+      const li = document.createElement('li');
+      li.textContent = `${p.name} (${p.position})`;
+      bench.appendChild(li);
     });
-  })
-  .catch(err => {
-    console.error('Error loading team data:', err);
-  });
+
+  } catch (err) {
+    document.getElementById('points').textContent = 'Error';
+    document.getElementById('captain').textContent = 'Error';
+    document.getElementById('transfers').textContent = 'Error';
+  }
+}
+
+loadTeamData();
