@@ -3,30 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FPL Monitor</title>
-  <link href="style.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Open+Sans&display=swap" rel="stylesheet" />
+  <title>RAKUTEN RAGE - FPL Monitor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="icon" href="/Logo.png" type="image/png">
 </head>
 <body>
-  <header>
-    <img src="/Logo.png" alt="FPL Logo" class="logo" />
-    <h1>FPL Team Monitor</h1>
-  </header>
+  <div class="container">
+    <header>
+      <img src="/Logo.png" alt="Logo" class="logo">
+      <h1>RAKUTEN RAGE - FPL MONITOR</h1>
+    </header>
 
-  <main>
-    <section id="teamInfo">
-      <p id="status">Updating...</p>
-      <div id="gameweek"></div>
-      <div id="points"></div>
-      <div id="captain"></div>
-      <div id="transfers"></div>
-      <div id="lineup"></div>
-      <div id="bench"></div>
-      <div id="chips"></div>
-      <div id="rankValue"></div>
+    <section id="summary">
+      <p><strong>Points:</strong> <span id="points">Updating...</span></p>
+      <p><strong>Captain:</strong> <span id="captain">Updating...</span></p>
+      <p><strong>Transfers:</strong> <span id="transfers">Updating...</span></p>
     </section>
-    <button id="refreshBtn">🔄 Refresh</button>
-  </main>
+
+    <section id="lineup">
+      <h2>Starting XI</h2>
+      <ul id="starters"></ul>
+      <h2>Bench</h2>
+      <ul id="bench"></ul>
+    </section>
+
+    <button id="refresh">🔄 Refresh</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
