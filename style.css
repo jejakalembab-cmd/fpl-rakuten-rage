@@ -23,9 +23,11 @@ h1 {
 
 /* Logo */
 .logo {
-  width: 100px;
-  height: auto;
-  margin-top: 20px;
+  width: 64px;
+  height: 64px;
+  margin-right: 12px;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 /* Kotak ringkasan */
