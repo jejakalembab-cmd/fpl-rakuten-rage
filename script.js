@@ -38,9 +38,9 @@ const fetchTeamData = async () => {
     });
 
   } catch (err) {
-    pointsEl.textContent = 'Error';
-    captainEl.textContent = 'Error';
-    transfersEl.textContent = 'Error';
+    pointsEl.textContent = 'Belum Sedia';
+    captainEl.textContent = 'Belum Sedia';
+    transfersEl.textContent = 'Belum Sedia';
     console.error('Failed to fetch team data:', err);
   }
 };
