@@ -24,11 +24,21 @@ header {
   border-radius: 8px;
 }
 
+/* Gambar tambahan di kanan header */
+.gambar-kanan {
+  width: 99px;
+  height: 100px;
+  border-radius: 8px;
+  margin-left: auto;
+}
+
 h1 {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.8rem;
   color: #ffffff;
   margin: 0;
+  flex-grow: 1;
+  text-align: center;
 }
 
 h2 {
@@ -55,7 +65,7 @@ li {
   border-radius: 8px;
 }
 
-button#refresh {
+button#refreshBtn {
   margin-top: 2rem;
   padding: 0.6rem 1.5rem;
   font-size: 1rem;
@@ -69,6 +79,6 @@ button#refresh {
   font-family: 'Orbitron', sans-serif;
 }
 
-button#refresh:hover {
+button#refreshBtn:hover {
   background-color: #d5ff4d;
 }
